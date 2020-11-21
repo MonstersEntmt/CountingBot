@@ -1,0 +1,3 @@
+[submodule "Third_Party/HyperDiscord"]
+	path = Third_Party/HyperDiscord
+	url = https://github.com/SkillerRaptor/HyperDiscord
