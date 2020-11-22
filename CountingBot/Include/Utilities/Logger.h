@@ -44,6 +44,7 @@ private:
 	static std::vector<std::string> Buffer;
 
 	static std::string LogFile;
+	static uint32_t MaxLogFiles;
 
 	static bool LogToFile;
 };

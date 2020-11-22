@@ -1,16 +1,22 @@
 #include "CountingBot.h"
 
+#include "Event/EventHandler.h"
+#include "Command/CommandHandler.h"
+#include "Command/CommandEvent.h"
+
 Logger CountingBotLogger("CountingBot");
 
 int main() {
-	const char* format = "This log splits into two lines %s";
+	Logger::Init();	// Initialize the logger
 
-	Logger::Init();
+	CommandHandler commandHandler;							// Create a CommandHandler instance.
+	EventHandler::RegisterEventHandler(&commandHandler);	// Register the commandHandler.
 
-	CountingBotLogger.LogInfo(format, "\nWhere this is the second line");
-	CountingBotLogger.LogDebug(format, "\nWhere this is the second line");
-	CountingBotLogger.LogWarning(format, "\nWhere this is the second line");
-	CountingBotLogger.LogError(format, "\nWhere this is the second line");
+	std::vector<std::string> commandArgs{ "set", "cankick", "true" };	// Create a CommandEvent and push it out into the EventHandler.
+	CommandEvent event = CommandEvent("admin", commandArgs);
+	EventHandler::PushEvent(&event);
 
-	Logger::DeInit();
+	EventHandler::HandleEvents();	// Handle the events in the queue.
+
+	Logger::DeInit();	// Deinitialize the logger
 }

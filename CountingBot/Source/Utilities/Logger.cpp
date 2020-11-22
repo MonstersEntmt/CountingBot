@@ -4,6 +4,14 @@
 #include <string_view>
 #include <filesystem>
 
+template <typename R>
+using TimedVector = std::vector<std::pair<std::filesystem::file_time_type, R>>;
+
+template <typename R>
+bool SortTimedVector(const std::pair<std::filesystem::file_time_type, R>& lhs, const std::pair<std::filesystem::file_time_type, R>& rhs) {
+	return lhs.first > rhs.first;
+}
+
 std::unordered_set<Severity> Logger::EnabledSeverities{
 	Severity::INFO,
 	Severity::DEBUG,
@@ -14,6 +22,7 @@ std::unordered_set<Severity> Logger::EnabledSeverities{
 std::vector<std::string> Logger::Buffer;
 
 std::string Logger::LogFile;
+uint32_t Logger::MaxLogFiles = 20;
 
 bool Logger::LogToFile = true;
 
@@ -56,6 +65,26 @@ void Logger::LogError(const char* format, ...) {
 }
 
 void Logger::Init() {
+	TimedVector<std::filesystem::path> logFiles;
+
+	if (std::filesystem::exists("Log/")) {
+		for (auto logFile : std::filesystem::directory_iterator("Log/")) {
+			if (logFile.is_regular_file()) {
+				logFiles.push_back({ logFile.last_write_time(), logFile.path() });
+			}
+		}
+	}
+
+	if (logFiles.size() >= (Logger::MaxLogFiles - 1)) {
+		std::sort(logFiles.begin(), logFiles.end(), SortTimedVector<std::filesystem::path>);
+
+		auto itr = logFiles.begin() + (Logger::MaxLogFiles - 1);
+		while (itr != logFiles.end()) {
+			std::filesystem::remove(itr->second);
+			itr = logFiles.erase(itr);
+		}
+	}
+
 	constexpr uint32_t timeBufferSize = 16;
 	std::time_t currentTime = std::time(nullptr);
 	char timeBuffer[timeBufferSize];
@@ -127,6 +156,9 @@ const char* Logger::GetSeverityName(Severity severity) {
 }
 
 void Logger::Log(const char* name, Severity severity, const char* format, va_list args) {
+	auto itr = Logger::EnabledSeverities.find(severity);
+	if (itr == Logger::EnabledSeverities.end()) return;
+
 	uint64_t length = vsnprintf(nullptr, 0, format, args) + 1ULL;
 	std::string str(length, '\0');
 	vsnprintf(str.data(), str.length(), format, args);
