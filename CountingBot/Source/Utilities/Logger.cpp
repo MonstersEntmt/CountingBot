@@ -30,6 +30,7 @@ Logger::Logger(const char* name)
 	: name(name) {}
 
 void Logger::Log(Severity severity, const char* format, ...) {
+	// Make a va_list and give that to the static Log function.
 	va_list args;
 	va_start(args, format);
 	Logger::Log(name, severity, format, args);
@@ -37,6 +38,7 @@ void Logger::Log(Severity severity, const char* format, ...) {
 }
 
 void Logger::LogInfo(const char* format, ...) {
+	// Make a va_list and give that to the static Log function.
 	va_list args;
 	va_start(args, format);
 	Logger::Log(name, Severity::INFO, format, args);
@@ -44,6 +46,7 @@ void Logger::LogInfo(const char* format, ...) {
 }
 
 void Logger::LogDebug(const char* format, ...) {
+	// Make a va_list and give that to the static Log function.
 	va_list args;
 	va_start(args, format);
 	Logger::Log(name, Severity::DEBUG, format, args);
@@ -51,6 +54,7 @@ void Logger::LogDebug(const char* format, ...) {
 }
 
 void Logger::LogWarning(const char* format, ...) {
+	// Make a va_list and give that to the static Log function.
 	va_list args;
 	va_start(args, format);
 	Logger::Log(name, Severity::WARNING, format, args);
@@ -58,6 +62,7 @@ void Logger::LogWarning(const char* format, ...) {
 }
 
 void Logger::LogError(const char* format, ...) {
+	// Make a va_list and give that to the static Log function.
 	va_list args;
 	va_start(args, format);
 	Logger::Log(name, Severity::ERROR, format, args);
@@ -67,7 +72,7 @@ void Logger::LogError(const char* format, ...) {
 void Logger::Init() {
 	TimedVector<std::filesystem::path> logFiles;
 
-	if (std::filesystem::exists("Log/")) {
+	if (std::filesystem::exists("Log/")) {	// Loop through every file in the Log/
 		for (auto logFile : std::filesystem::directory_iterator("Log/")) {
 			if (logFile.is_regular_file()) {
 				logFiles.push_back({ logFile.last_write_time(), logFile.path() });
@@ -75,11 +80,12 @@ void Logger::Init() {
 		}
 	}
 
-	if (logFiles.size() >= (Logger::MaxLogFiles - 1)) {
+	if (logFiles.size() >= (Logger::MaxLogFiles - 1)) {	// Loop from the Logger::MaxLogFiles - 1 to the end of the vector
 		std::sort(logFiles.begin(), logFiles.end(), SortTimedVector<std::filesystem::path>);
 
 		auto itr = logFiles.begin() + (Logger::MaxLogFiles - 1);
 		while (itr != logFiles.end()) {
+			// And delete that file.
 			std::filesystem::remove(itr->second);
 			itr = logFiles.erase(itr);
 		}
@@ -89,6 +95,7 @@ void Logger::Init() {
 	std::time_t currentTime = std::time(nullptr);
 	char timeBuffer[timeBufferSize];
 
+	// Get the LogFile as "Log/log_%H_%M_%S.txt" and if it was unsuccessful skip logging to a file all together.
 	if (std::strftime(timeBuffer, timeBufferSize, "log_%H_%M_%S", std::localtime(&currentTime))) {
 		Logger::LogFile = "Log/" + std::string(timeBuffer) + ".txt";
 	} else {
@@ -97,6 +104,7 @@ void Logger::Init() {
 }
 
 void Logger::DeInit() {
+	// Force Flush the logger.
 	Logger::Flush();
 }
 
@@ -156,15 +164,18 @@ const char* Logger::GetSeverityName(Severity severity) {
 }
 
 void Logger::Log(const char* name, Severity severity, const char* format, va_list args) {
+	// If the severity is not in the EnabledSeverities set then return instantly.
 	auto itr = Logger::EnabledSeverities.find(severity);
 	if (itr == Logger::EnabledSeverities.end()) return;
 
+	// Format the string.
 	uint64_t length = vsnprintf(nullptr, 0, format, args) + 1ULL;
 	std::string str(length, '\0');
 	vsnprintf(str.data(), str.length(), format, args);
 
 	std::vector<std::string_view> lines;
 
+	// Split the string into it's lines.
 	uint64_t offset = 0;
 	uint64_t index;
 	while ((index = str.find_first_of('\n', offset)) < str.length()) {
@@ -179,6 +190,7 @@ void Logger::Log(const char* name, Severity severity, const char* format, va_lis
 	for (auto& line : lines) {
 		std::string logMsg;
 		std::string consoleMsg;
+		// Only add the log header if it's the first line.
 		if (firstLine) {
 			std::string color = std::string(Logger::GetSeverityColor(severity));
 
@@ -211,26 +223,35 @@ void Logger::Log(const char* name, Severity severity, const char* format, va_lis
 		logMsg += std::string(line) + "\n";
 		consoleMsg += std::string(line) + "\033[0m\n";
 
+		// Add the message to a buffer if logging to file is enabled.
 		if (Logger::LogToFile) Logger::Buffer.push_back(logMsg);
 
+		// Print the message to the console.
 		printf("%s", consoleMsg.c_str());
 	}
 
+	// Flush the messages out to the file after a certain number of messages have been logged.
 	if (Logger::LogToFile && Logger::Buffer.size() > Logger::GetSeverityMaxBufferCount(severity)) {
 		Logger::Flush();
 	}
 }
 
 void Logger::Flush() {
+	// If the logger does not log to a file just return instantly.
+	if (!Logger::LogToFile) return;
+
+	// Create the directory if it doesn't exist.
 	std::filesystem::path path{ Logger::LogFile };
 	std::filesystem::create_directories(path.parent_path());
 
 	FILE* file = fopen(Logger::LogFile.c_str(), "a");
 	if (file) {
+		// Write all the messages and then clear the buffer.
 		for (auto& str : Logger::Buffer) fwrite(str.data(), sizeof(char), str.length(), file);
 		Logger::Buffer.clear();
 		fclose(file);
 	} else {
+		// If the file could not be opened make sure it can't be used in the future.
 		Logger::LogToFile = false;
 	}
 }
