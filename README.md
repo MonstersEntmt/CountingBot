@@ -1,4 +1,6 @@
 # CountingBot
+![](https://img.shields.io/badge/license-GNU%20General%20Public%20License%20v3.0-yellow)
+![](https://github.com/MarcaGames/CountingBot/workflows/build/badge.svg)<br>
 The bot used on a Counting Server to handle messages.
 
 ## How do I contribute?
@@ -10,12 +12,12 @@ You don't have permissions to push code directly to this repository, so you'll n
 To do this, press the "Fork" button in the upper-right corner of this page, and Github magic will take care of the rest!
 
 Now that you've got a fork, you'll need to clone it. This means that you create a local (i.e. on your own hard drive) copy of the repository.
-```
+```bash
 git clone --recurse-submodule -j8 https://github.com/<MyGithubAccount>/CountingBot.git
 cd CountingBot
 ```
 If that didn't work, due to using an older version of git, you might want to try
-```
+```bash
 git clone https://github.com/<MyGithubAccount>/CountingBot.git
 cd CountingBot
 git submodule update --init --recursive
@@ -57,11 +59,11 @@ You can get the latest version [here](https://premake.github.io/download)! Make 
 Note: This is just a basic workflow, for more detailed descriptions see [the documentation](https://git-scm.com/docs).
 
 Checking the status of your repository:
-```
+```bash
 git status
 ```
 Saving (committing) your changes (do this regularly):
-```
+```bash
 # For a list of files
 git add <file1> <file2>
 # For all files
@@ -70,25 +72,25 @@ git add *
 git commit -m "Message"
 ```
 Branch management:
-```
+```bash
 git branch branchName       # Creates the branch
 git checkout branchName     # To switch to that branch
 git branch -d branchName    # Deletes the branch (local)
 git push origin :branchName # Deletes the branch (remote)
 ```
 Pushing your changes to a remote repository:
-```
+```bash
 git push
 ```
 Reverting back to an older commit: (**WARNING**: you will lose all uncommitted work)
-```
+```bash
 # Find the commit ID (e.g. a1b2c3d4)
 git log --oneline
 
 git reset --hard a1b2c3d4
 ```
 Ensuring your local repository is up-to-date with the original repository:
-```
+```bash
 # Only do this once:
 git remote add upstream https://github.com/MarcaGames/CountingBot.git
 
@@ -97,7 +99,7 @@ git checkout master
 git merge upstream/master
 ```
 Rebasing your branch (first, ensure your local repository is up-to-date with the original repository):
-```
+```bash
 git checkout branchName
 git rebase master
 ```
