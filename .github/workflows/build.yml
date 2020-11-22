@@ -14,8 +14,8 @@ jobs:
     - name: Generate Project Files
       run: |
         cd ..
-        curl --output premake.zip --url https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip 
-        unzip premake.zip
+        curl -L -O https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip
+        tar -xf premake-5.0.0-alpha15-windows.zip
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
