@@ -53,6 +53,7 @@ function globalApp.app(name, currentPath, verbose)
 	app.exceptionHandling = "On"
 	app.flags = { "MultiProcessorCompile" }
 	app.name = name
+	app.addLink = true
 	app.currentPath = currentPath
 	app.dependencies = {}
 	app.group = "Libs"
@@ -137,7 +138,9 @@ local function premakeApp(app, verbose)
 	local deps = {}
 	local sysincludedirectories = {}
 	for name, dep in pairs(app.dependencies) do
-		table.insert(deps, name)
+		if dep.addLink then
+			table.insert(deps, name)
+		end
 		premakeApp(dep)
 		getAllIncludeDirectories(dep, sysincludedirectories)
 	end
