@@ -3,7 +3,7 @@ The bot used on a Counting Server to handle messages.
 
 ## How do I contribute?
 The first step in contributing is to download all the necessary tools.
-You will need Premake5 ([see Premake](#-Premake)) and a C++ compiler (if you're using Visual Studio you're all set!).
+You will need Premake5 ([see Premake](#Premake)) and a C++ compiler (if you're using Visual Studio you're all set!).
 
 Next, you'll need to fork this repository.
 You don't have permissions to push code directly to this repository, so you'll need to make your own copy.
@@ -21,7 +21,7 @@ cd CountingBot
 git submodule update --init --recursive
 ```
 Excelent, you've got a local copy of this repository.
-Now you need to build the code ([see Building](#-Building)) and make your changes (for a basic Git workflow, [see Git](#-Git)).
+Now you need to build the code ([see Building](#Building)) and make your changes (for a basic Git workflow, [see Git](#Git)).
 Remember to re-run Premake whenever you add a new file.
 
 Changes committed and pushed?
