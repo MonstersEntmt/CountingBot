@@ -16,7 +16,7 @@ jobs:
         cd ..
         sudo apt install unzip
         sudo wget -c https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip 
-        sudo unzip https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip
+        sudo unzip premake-5.0.0-alpha15-windows.zip
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
