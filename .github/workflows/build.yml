@@ -14,8 +14,8 @@ jobs:
     - name: Download Premake
       run: |
         cd ..
-        curl -L -O https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip
-        tar -xf premake-5.0.0-alpha15-windows.zip
+        curl.exe -L -O https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip
+        tar.exe -x -f ./premake-5.0.0-alpha15-windows.zip
 
     - name: Generate Project Files
       run: |
