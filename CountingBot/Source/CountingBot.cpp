@@ -1,32 +1,35 @@
 #include "CountingBot.h"
 
 #include "Event/EventHandler.h"
-#include "Command/CommandHandler.h"
-#include "Command/CommandEvent.h"
+#include "Command/CommandEventHandler.h"
+#include "Message/MessageEventHandler.h"
+
+#include "Message/MessageEvent.h"
+
+#include <HyperDiscord.h>
 
 void CountingBot::Init(const char* token) {
 	Logger::Init();	// Initialize the logger
-
 	if (!token) throw std::exception("Token was not given!");
 
+	// Create a CommandEventHandler instance and register it.
+	this->commandEventHandler = new CommandEventHandler();
+	EventHandler::RegisterEventHandler(this->commandEventHandler);
+
+	// Create a MessageEventHandler instance and register it.
+	this->messageEventHandler = new MessageEventHandler();
+	EventHandler::RegisterEventHandler(this->messageEventHandler);
+
+	// Create a HyperClient instance.
 	this->hyperClient = new HyperDiscord::HyperClient(token, HyperDiscord::TokenType::BOT);
 
-	this->running = true;
+	this->running = true;	// Set running to true such that it will update the CountingBot.
 }
 
 void CountingBot::Update() {
 	this->hyperClient->Update();
 
-	CommandHandler commandHandler;							// Create a CommandHandler instance.
-	EventHandler::RegisterEventHandler(&commandHandler);	// Register the commandHandler.
-
-	std::vector<std::string> commandArgs{ "set", "cankick", "true" };	// Create a CommandEvent and push it out into the EventHandler.
-	CommandEvent event = CommandEvent("admin", commandArgs);
-	EventHandler::PushEvent(&event);
-
 	EventHandler::HandleEvents();	// Handle the events in the queue.
-
-	this->running = false;
 }
 
 void CountingBot::DeInit() {

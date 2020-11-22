@@ -1,10 +1,10 @@
-#include "Command/CommandHandler.h"
+#include "Command/CommandEventHandler.h"
 #include "Command/CommandEvent.h"
 
-CommandHandler::CommandHandler()
-	: EventHandler("Command Handler", true) {}
+CommandEventHandler::CommandEventHandler()
+	: EventHandler("Command Event Handler", true) {}
 
-void CommandHandler::HandleEvent(Event* event) {
+void CommandEventHandler::HandleEvent(Event* event) {
 	if (event->GetType() == CommandEvent::GetTypeS()) {	// Check if the event is a command event.
 		// Convert it to the CommandEvent type.
 		CommandEvent* commandEvent = reinterpret_cast<CommandEvent*>(event);

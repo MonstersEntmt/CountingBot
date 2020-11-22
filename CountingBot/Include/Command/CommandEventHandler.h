@@ -2,9 +2,9 @@
 
 #include "Event/EventHandler.h"
 
-class CommandHandler : public EventHandler {
+class CommandEventHandler : public EventHandler {
 public:
-	CommandHandler();
+	CommandEventHandler();
 
 	virtual void HandleEvent(Event* event) override;
 };

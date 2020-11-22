@@ -10,6 +10,9 @@ countingBot.kind = "ConsoleApp"
 
 globalApp.addDependency(countingBot, hyperDiscord, verbose)
 
+globalApp.addState(countingBot, { filter = {}, premakeState = function()
+	links { "Winhttp.lib", "fwpuclnt.lib", "ntdsapi.lib" }
+end}, verbose)
 globalApp.addState(countingBot, { filter = "system:linux", premakeState = function()
 	linkoptions { "-pthread -Wl, -rpath=\\$$ORIGIN" }
 	links { "dl" }

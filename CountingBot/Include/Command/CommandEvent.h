@@ -1,23 +1,26 @@
 #pragma once
 
 #include "Event/Event.h"
+#include "Message/MessageEvent.h"
 
 #include <string>
 #include <vector>
 
+using CommandArgs = std::vector<std::string>;
+
 struct CommandEvent : public Event {
 public:
-	CommandEvent(/* const Message& message, */ const std::string& command, const std::vector<std::string>& arguments);
+	CommandEvent(const MessageEvent& message, const std::string& command, const CommandArgs& arguments);
 
-	__forceinline static EventType GetTypeS() { return EventType::COMMAND; }
 	virtual EventType GetType() const override;
+	inline static EventType GetTypeS() { return EventType::COMMAND; }
 
-	// const Message& GetMessage() const;
+	const MessageEvent& GetMessage() const;
 	const std::string& GetCommand() const;
-	const std::vector<std::string>& GetArguments() const;
+	const CommandArgs& GetArguments() const;
 
 private:
-	//Message msg;
+	MessageEvent msg;
 	std::string cmd;
-	std::vector<std::string> args;
+	CommandArgs args;
 };

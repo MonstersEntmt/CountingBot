@@ -2,6 +2,8 @@
 
 const char* Event::GetTypeStr() {
 	switch (this->GetType()) {
+	case EventType::MESSAGE:
+		return "Message";
 	case EventType::COMMAND:
 		return "Command";
 	default:

@@ -1,6 +1,7 @@
 #pragma once
 
 enum class EventType {
+	MESSAGE,
 	COMMAND
 };
 

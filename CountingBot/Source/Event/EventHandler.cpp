@@ -48,6 +48,7 @@ void EventHandler::HandleEvents() {
 				handler->logger.LogError("Exception was thrown from HandleEvent with event type '%s'!\n%s", event->GetTypeStr(), e.what());
 			}
 		}
+		delete event;	// Delete the event since it has to have been handled now.
 	}
 }
 
