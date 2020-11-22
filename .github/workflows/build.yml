@@ -10,6 +10,8 @@ jobs:
         shell: cmd
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     - name: Download Premake
       run: |
