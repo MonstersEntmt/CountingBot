@@ -4,19 +4,18 @@ on: [ push, pull_request ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     defaults:
       run:
-        shell: bash
+        shell: cmd
     steps:
     - uses: actions/checkout@v2
 
     - name: Generate Project Files
       run: |
         cd ..
-        sudo apt install unzip
-        sudo wget -c https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip 
-        sudo unzip premake-5.0.0-alpha15-windows.zip
+        curl --output premake.zip --url https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip 
+        unzip premake.zip
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
