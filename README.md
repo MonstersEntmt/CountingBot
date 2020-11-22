@@ -1,5 +1,5 @@
 # CountingBot
-![](https://img.shields.io/badge/license-GNU%20General%20Public%20License%20v3.0-yellow)
+![](https://img.shields.io/badge/license-GPL%203.0-yellow)
 ![](https://github.com/MarcaGames/CountingBot/workflows/build/badge.svg)<br>
 The bot used on a Counting Server to handle messages.
 
