@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Generate Project Files
+      run: |
+        cd ..
+        sudo apt install unzip
+        sudo wget -c https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip 
+        sudo unzip https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Build Solution
+      run: msbuild -property:Configuration=Release,MultiProcessorCompilation=true -maxCpuCount -verbosity:minimal -noLogo CountingBot.sln
