@@ -34,6 +34,11 @@ public:
 	// Deinitializes the logger.
 	static void DeInit();
 
+	// Enables a severity to be logged.
+	static void EnableSeverity(Severity severity);
+	// Disabled a severity such that it wont be logged.
+	static void DisableSeverity(Severity severity);
+
 private:
 	// Get's the max number of messages before flushing to the file.
 	static uint64_t GetSeverityMaxBufferCount(Severity severity);

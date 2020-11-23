@@ -108,6 +108,16 @@ void Logger::DeInit() {
 	Logger::Flush();
 }
 
+void Logger::EnableSeverity(Severity severity) {
+	// Insert the severity into the EnabledSeverity set.
+	Logger::EnabledSeverities.insert(severity);
+}
+
+void Logger::DisableSeverity(Severity severity) {
+	// Remove the severity from the EnabledSeverity set.
+	Logger::EnabledSeverities.erase(severity);
+}
+
 uint64_t Logger::GetSeverityMaxBufferCount(Severity severity) {
 	switch (severity) {
 	case Severity::ERROR:
