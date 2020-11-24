@@ -4,6 +4,7 @@
 
 namespace HyperDiscord {
 	class HyperClient;
+	class Event;
 }
 
 class CommandEventHandler;
@@ -20,6 +21,8 @@ public:
 
 	// Is the bot currently running.
 	bool IsRunning();
+
+	void OnHyperDiscordEvent(HyperDiscord::Event& event);
 
 private:
 	CommandEventHandler* commandEventHandler = nullptr;	// CommandEventHandler instance.
