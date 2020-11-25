@@ -1,19 +1,19 @@
-local currentPath, verbose = ...
-
-local globalApp = require("../premake/app")
-
-local json = globalApp.app("JSON", currentPath .. "vendor/json/", verbose)
+APP.PushGlobals()
+GLOBALS.currentPath = GLOBALS.currentPath .. "vendor/json/"
+local json = APP.GetOrCreateApp("JSON")
+APP.PopGlobals()
 json.kind = "StaticLib"
 json.location = ""
 json.includeDir = ""
 json.sourceDir = ""
 json.addLink = false
 
-local app = globalApp.app("HyperDiscord", currentPath, verbose)
-app.kind = "StaticLib"
-app.includeDir = "src/HyperDiscord"
-app.sourceDir = "src/"
+local hyperDiscord = APP.GetOrCreateApp("HyperDiscord")
+hyperDiscord.kind = "StaticLib"
+hyperDiscord.location = ""
+hyperDiscord.includeDir = "src/HyperDiscord"
+hyperDiscord.sourceDir = "src/"
 
-globalApp.addDependency(app, json, verbose)
+hyperDiscord.AddDependency(json)
 
-return app
+return { hyperDiscord, json }

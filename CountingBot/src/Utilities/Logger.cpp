@@ -205,7 +205,7 @@ void Logger::Log(const char* name, Severity severity, const char* format, va_lis
 			std::string color = std::string(Logger::GetSeverityColor(severity));
 
 			std::string nameStr(name);
-			logMsg = "[" + nameStr + "]";
+			logMsg = "[" + nameStr + "] ";
 			consoleMsg = color + logMsg;
 
 			constexpr uint32_t timeBufferSize = 16;

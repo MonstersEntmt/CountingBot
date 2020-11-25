@@ -25,7 +25,7 @@
 *.Make
 
 premake5.exe
-premake5.bat
+*.bat
 
 /Output/
 /CountingBot/Run/Log

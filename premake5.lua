@@ -1,8 +1,11 @@
-local ProjectName = "CountingBot"
+APP = require("premake/app")
+UTILS = require("premake/utils")
 
-local globalApp = require("premake/app")
-local app = globalApp.local_app(true)
+APP.SetWorkspaceName("CountingBot")
+UTILS.AddPlatforms()
+UTILS.AddConfigurations()
 
-local utils = require("premake/utils")
+local apps = APP.GetLocalApp()
+APP.SetStartApp(apps[1])
 
-globalApp.premakeWorkspace(ProjectName, utils.get_platforms(), { "Debug", "Release" }, app, true)
+APP.PremakeWorkspace()

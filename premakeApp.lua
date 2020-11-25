@@ -1,30 +1,20 @@
-local currentPath, verbose = ...
+local hyperDiscord = APP.GetThirdPartyLibrary("HyperDiscord")
 
-local globalApp = require("premake/app")
-
-local hyperDiscord = globalApp.third_party_library("HyperDiscord", currentPath, verbose)
-
-local countingBot = globalApp.app("CountingBot", currentPath, verbose)
+local countingBot = APP.GetOrCreateApp("CountingBot")
 countingBot.group = "Apps"
 countingBot.kind = "ConsoleApp"
 
-globalApp.addDependency(countingBot, hyperDiscord, verbose)
+countingBot.AddDependency(hyperDiscord[1])
 
-globalApp.addState(countingBot, { filter = {}, premakeState = function()
-	links { "Winhttp.lib", "fwpuclnt.lib", "ntdsapi.lib" }
-end}, verbose)
-globalApp.addState(countingBot, { filter = "system:linux", premakeState = function()
-	linkoptions { "-pthread -Wl, -rpath=\\$$ORIGIN" }
-	links { "dl" }
-end}, verbose)
-globalApp.addState(countingBot, { filter = "system:ios", premakeState = function()
-	files {
-		countingBot.currentPath .. countingBot.resourceDir .. "Info.plist",
-		countingBot.currentPath .. countingBot.resourceDir
-	}
-end}, verbose)
-globalApp.addState(countingBot, { filter = { "system:macosx or ios", "files:**.cpp" }, premakeState = function()
-	compileas "Objective-C++"
-end}, verbose)
+countingBot.AddState({}, function()
+	links({ "Winhttp.lib", "fwpuclnt.lib", "ntdsapi.lib" })
+end)
+countingBot.AddState("system:linux", function()
+	linkoptions({ "-pthread -Wl, -rpath=\\$$ORIGIN" })
+	links({ "dl" })
+end)
+countingBot.AddState({ "system:macosx or ios", "files:**.cpp" }, function()
+	compileas("Objective-C++")
+end)
 
-return countingBot
+return { countingBot }
